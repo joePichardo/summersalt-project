@@ -4,14 +4,17 @@ import { useRouter } from 'next/router';
 function Collection() {
   const router = useRouter()
   const { handle } = router.query
+
   // Define state variables to keep track of the products and the current page number
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
   // Fetch products when the page is loaded or when the current page number changes
   useEffect(() => {
-    fetchProducts(currentPage);
-  }, [currentPage]);
+    if (handle) {
+      fetchProducts(currentPage);
+    }
+  }, [handle, currentPage]);
 
   // Fetch products from the endpoint and update the products state
   const fetchProducts = async (page) => {
@@ -54,7 +57,9 @@ function Collection() {
     }
   }
 
-
+  if (!router.isReady) {
+    return <div>Loading...</div>
+  }
   // Render the list of products, displaying the title and first image of each product and linking to its detail page
   return (
     <>
